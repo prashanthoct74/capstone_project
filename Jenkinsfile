@@ -40,9 +40,6 @@ pipeline {
 
                     // Stop and remove any existing container
                     sh """
-                    docker stop my_container || true
-                    docker rm my_container || true
-                    
                     // Run the new container
                     docker run -d --name my_container -p 80:80 prashantoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}  // Adjust ports as needed
                     """
