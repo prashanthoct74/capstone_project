@@ -21,7 +21,7 @@ pipeline {
 
         stage("Push Image") {
             steps {
-                withDockerRegistry([ credentialsId: "docker_cred", url: "" ]) {
+                withDockerRegistry([ credentialsId: "docker_cred", url: "https://index.docker.io/v1/" ]) {
                     // Tag the image
                     sh "docker tag ${DOCKER_IMAGE}:${IMAGE_VERSION} prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
                     
@@ -30,6 +30,7 @@ pipeline {
                 }
             }
         }
+
 
         stage("Deploy Docker Image") {
             steps {
