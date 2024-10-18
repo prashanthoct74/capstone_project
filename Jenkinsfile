@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'asi_insurance'  // Replace with your Docker image name
+        IMAGE_VERSION = '1.0'            // Version variable for easy updates
     }
 
     stages {
@@ -14,22 +15,21 @@ pipeline {
 
         stage("Build Image") {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE}:1.0 ."
+                sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_VERSION} ."
             }
         }
 
         stage("Docker Push") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
-
                     // Log in to Docker Hub
-                    sh 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
+                    sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin'
                     
                     // Tag the image
-                    sh "docker tag ${DOCKER_IMAGE}:1.0 prashanthoct74/${DOCKER_IMAGE}:1.0"
+                    sh "docker tag ${DOCKER_IMAGE}:${IMAGE_VERSION} prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
                     
                     // Push the image to Docker Hub
-                    sh "docker push prashanthoct74/${DOCKER_IMAGE}:1.0"
+                    sh "docker push prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
                     
                     // Log out from Docker Hub
                     sh 'docker logout'
@@ -40,8 +40,8 @@ pipeline {
         stage("Deploy Docker Image") {
             steps {
                 script {
-                    // Pull the latest image (optional, can be skipped if the image is built in this pipeline)
-                    sh "docker pull prashanthoct74/${DOCKER_IMAGE}:1.0"
+                    // Pull the latest image (optional)
+                    sh "docker pull prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
 
                     // Stop and remove any existing container
                     sh """
@@ -49,7 +49,7 @@ pipeline {
                     docker rm my_container || true
                     
                     // Run the new container
-                    docker run -d --name my_container -p 80:80 prashanthoct74/${DOCKER_IMAGE}:1.0  # Adjust ports as needed
+                    docker run -d --name my_container -p 80:80 prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}  # Adjust ports as needed
                     """
                 }
             }
