@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'asi_insurance'  // Replace with your Docker image name
+        DOCKER_IMAGE = 'asi_insurance'  // Your Docker image name
         IMAGE_VERSION = '1.0'            // Version variable for easy updates
     }
 
@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage("Docker Push") {
+        stage("Push Image") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                     // Tag the image
@@ -27,9 +27,6 @@ pipeline {
                     
                     // Push the image to Docker Hub
                     sh "docker push prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
-                    
-                    // Log out from Docker Hub
-                    sh 'docker logout'
                 }
             }
         }
@@ -46,7 +43,7 @@ pipeline {
                     docker rm my_container || true
                     
                     // Run the new container
-                    docker run -d --name my_container -p 80:80 prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}  # Adjust ports as needed
+                    docker run -d --name my_container -p 80:80 prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}  // Adjust ports as needed
                     """
                 }
             }
