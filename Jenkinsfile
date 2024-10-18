@@ -23,10 +23,10 @@ pipeline {
             steps {
                 withDockerRegistry([ credentialsId: "docker_cred", url: "https://index.docker.io/v1/" ]) {
                     // Tag the image
-                    sh "docker tag ${DOCKER_IMAGE}:${IMAGE_VERSION} prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
+                    sh "docker tag ${DOCKER_IMAGE}:${IMAGE_VERSION} prashantoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
                     
                     // Push the image to Docker Hub
-                    sh "docker push prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
+                    sh "docker push prashantoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
                 }
             }
         }
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     // Pull the latest image (optional)
-                    sh "docker pull prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
+                    sh "docker pull prashantoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
 
                     // Stop and remove any existing container
                     sh """
@@ -44,7 +44,7 @@ pipeline {
                     docker rm my_container || true
                     
                     // Run the new container
-                    docker run -d --name my_container -p 80:80 prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}  // Adjust ports as needed
+                    docker run -d --name my_container -p 80:80 prashantoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}  // Adjust ports as needed
                     """
                 }
             }
