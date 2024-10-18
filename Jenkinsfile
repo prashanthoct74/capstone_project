@@ -12,16 +12,6 @@ pipeline {
             }
         }
 
-        stage("Build") {
-            steps {
-                // Install npm if needed and build the application
-                sh 'sudo apt update'
-                sh 'sudo apt install -y npm'
-                sh 'npm install'  // Ensure dependencies are installed
-                sh 'npm run build'
-            }
-        }
-
         stage("Build Image") {
             steps {
                 sh "docker build -t ${DOCKER_IMAGE}:1.0 ."
