@@ -21,7 +21,7 @@ pipeline {
 
         stage("Push Image") {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+                withDockerRegistry([ credentialsId: "docker_cred", url: "" ]) {
                     // Tag the image
                     sh "docker tag ${DOCKER_IMAGE}:${IMAGE_VERSION} prashanthoct74/${DOCKER_IMAGE}:${IMAGE_VERSION}"
                     
